@@ -50,8 +50,6 @@ def fetch_advisories():
         posted_time = parser.parse(advisory['posted'], tzinfos=tzinfos)
         posted_time = posted_time.astimezone(pacific_tz)
 
-        print(current_time)
-        print(posted_time)
         time_difference = current_time - posted_time
         if time_difference <= timedelta(minutes=5):
             description = advisory['description']['#cdata-section']
