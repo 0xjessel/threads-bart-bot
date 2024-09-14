@@ -35,7 +35,8 @@ def fetch_advisories():
             continue
 
     data = response.json()
-    advisories = data['root']['bsa']
+    root = data['root']
+    advisories = root['bsa']
     
     pacific_tz = pytz.timezone('US/Pacific')
     current_time = datetime.now(pacific_tz)
@@ -45,14 +46,20 @@ def fetch_advisories():
 
     recent_advisories = []
 
+    # Check if there's only one advisory and it's "No delays reported"
+    if isinstance(advisories, list) and len(advisories) == 1 and advisories[0]['description']['#cdata-section'].lower() == "no delays reported.":
+        return []
+
+    # If it's not a "No delays reported" case, proceed with processing advisories
     for advisory in advisories:
-        # Parse the time with tzinfos
-        posted_time = parser.parse(advisory['posted'], tzinfos=tzinfos)
+        description = advisory['description']['#cdata-section']
+        # Use the root date and time as the posted time
+        posted_time_str = f"{root['date']} {root['time']}"
+        posted_time = parser.parse(posted_time_str, tzinfos=tzinfos)
         posted_time = posted_time.astimezone(pacific_tz)
 
         time_difference = current_time - posted_time
         if time_difference <= timedelta(minutes=5):
-            description = advisory['description']['#cdata-section']
             recent_advisories.append(description)
 
     return recent_advisories
@@ -63,7 +70,7 @@ if __name__ == '__main__':
         for advisory in recent_advisories:
             print(advisory)
     """
-    hide for now to test cron job
+    suppress while testing
     else:
-        print("No recent advisories found.")
+        print("No advisories found.")
     """
