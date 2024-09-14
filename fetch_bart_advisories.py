@@ -5,6 +5,7 @@ from dateutil import parser
 from datetime import datetime, timedelta
 import pytz
 import time  # Add this import at the top of the file
+from dateutil.tz import gettz  # Add this import at the top of the file
 
 # Load environment variables
 load_dotenv(".env.local")
@@ -39,19 +40,20 @@ def fetch_advisories():
     pacific_tz = pytz.timezone('US/Pacific')
     current_time = datetime.now(pacific_tz)
 
-    # Create tzinfos dynamically
-    tzinfos = {
-        "PDT": pacific_tz,
-        "PST": pacific_tz
-    }
+    # Create tzinfos dictionary
+    tzinfos = {"PDT": gettz("US/Pacific"), "PST": gettz("US/Pacific")}
 
     recent_advisories = []
 
     for advisory in advisories:
         # Parse the time with tzinfos
         posted_time = parser.parse(advisory['posted'], tzinfos=tzinfos)
+        posted_time = posted_time.astimezone(pacific_tz)
 
-        if current_time - posted_time <= timedelta(minutes=5): # 5 minutes delta since cron job runs every 5 minutes
+        print(current_time)
+        print(posted_time)
+        time_difference = current_time - posted_time
+        if time_difference <= timedelta(minutes=5):
             description = advisory['description']['#cdata-section']
             recent_advisories.append(description)
 
