@@ -7,13 +7,13 @@ import pytz
 import time  # Add this import at the top of the file
 
 # Load environment variables
-load_dotenv()
+load_dotenv(".env.local")
 
 BART_API_BASE_URL = 'https://api.bart.gov/api/bsa.aspx'
 BART_API_KEY = os.getenv('BART_API_KEY')
 
 def fetch_advisories():
-    max_retries = 5
+    max_retries = 10 
 
     for attempt in range(max_retries):
         try:
@@ -21,7 +21,7 @@ def fetch_advisories():
                 'cmd': 'bsa',
                 'key': BART_API_KEY,
                 'json': 'y'
-            }, timeout=10)  # 10 seconds timeout
+            }, timeout=4)  # 4 seconds timeout
             response.raise_for_status()
             break  # If successful, break out of the retry loop
         except requests.RequestException as e:
@@ -29,8 +29,8 @@ def fetch_advisories():
                 print(f"Error fetching BART advisories after {max_retries} attempts: {e}")
                 return None
             
-            print(f"Attempt {attempt + 1} failed. Retrying in 30 seconds...")
-            time.sleep(30)
+            print(f"Attempt {attempt + 1} failed. Retrying in 10 seconds...")
+            time.sleep(10)
             continue
 
     data = response.json()
