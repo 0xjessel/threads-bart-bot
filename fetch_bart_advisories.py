@@ -4,6 +4,7 @@ from dotenv import load_dotenv
 from dateutil import parser
 from datetime import datetime, timedelta
 import pytz
+import time  # Add this import at the top of the file
 
 # Load environment variables
 load_dotenv()
@@ -12,42 +13,51 @@ BART_API_BASE_URL = 'https://api.bart.gov/api/bsa.aspx'
 BART_API_KEY = os.getenv('BART_API_KEY')
 
 def fetch_advisories():
-    try:
-        response = requests.get(BART_API_BASE_URL, params={
-            'cmd': 'bsa',
-            'key': BART_API_KEY,
-            'json': 'y'
-        }, timeout=10)
-        response.raise_for_status()
+    max_retries = 3
+    wait_times = [30, 60, 60]  # Wait times in seconds
 
-        data = response.json()
-        advisories = data['root']['bsa']
-        
-        pacific_tz = pytz.timezone('US/Pacific')
-        current_time = datetime.now(pacific_tz)
+    for attempt in range(max_retries):
+        try:
+            response = requests.get(BART_API_BASE_URL, params={
+                'cmd': 'bsa',
+                'key': BART_API_KEY,
+                'json': 'y'
+            }, timeout=10)  # 10 seconds timeout
+            response.raise_for_status()
+            break  # If successful, break out of the retry loop
+        except requests.RequestException as e:
+            if attempt == max_retries - 1:  # If it's the last attempt
+                print(f"Error fetching BART advisories after {max_retries} attempts: {e}")
+                return None
+            
+            wait_time = wait_times[attempt]
+            print(f"Attempt {attempt + 1} failed. Retrying in {wait_time} seconds...")
+            time.sleep(wait_time)
+            continue
 
-        # Create tzinfos dynamically
-        tzinfos = {
-            "PDT": pacific_tz,
-            "PST": pacific_tz
-        }
+    data = response.json()
+    advisories = data['root']['bsa']
+    
+    pacific_tz = pytz.timezone('US/Pacific')
+    current_time = datetime.now(pacific_tz)
 
-        recent_advisories = []
+    # Create tzinfos dynamically
+    tzinfos = {
+        "PDT": pacific_tz,
+        "PST": pacific_tz
+    }
 
-        for advisory in advisories:
-            # Parse the time with tzinfos
-            posted_time = parser.parse(advisory['posted'], tzinfos=tzinfos)
+    recent_advisories = []
 
-            if current_time - posted_time <= timedelta(minutes=1):
-                description = advisory['description']['#cdata-section']
-                recent_advisories.append(description)
+    for advisory in advisories:
+        # Parse the time with tzinfos
+        posted_time = parser.parse(advisory['posted'], tzinfos=tzinfos)
 
-        return recent_advisories
+        if current_time - posted_time <= timedelta(minutes=5): # 5 minutes delta since cron job runs every 5 minutes
+            description = advisory['description']['#cdata-section']
+            recent_advisories.append(description)
 
-    except requests.RequestException as e:
-        # suppress error for now to test cron job
-        # print(f"Error fetching BART advisories: {e}")
-        return None
+    return recent_advisories
 
 if __name__ == '__main__':
     recent_advisories = fetch_advisories()
