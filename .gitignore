@@ -1,3 +1,9 @@
+# Ignore all .env files except .env.example
 .env*
+!.env.example
+
+# Ignore virtual environment directory
 venv/
+
+# Ignore Python cache directories
 __pycache__/
