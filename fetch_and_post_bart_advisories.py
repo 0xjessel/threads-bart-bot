@@ -15,7 +15,7 @@ BART_API_BASE_URL = 'https://api.bart.gov/api/bsa.aspx'
 BART_API_KEY = os.getenv('BART_API_KEY')
 
 def fetch_advisories():
-    max_retries = 10 
+    max_retries = 12 
 
     for attempt in range(max_retries):
         try:
@@ -31,8 +31,8 @@ def fetch_advisories():
                 print(f"Error fetching BART advisories after {max_retries} attempts: {e}")
                 return None
             
-            print(f"Attempt {attempt + 1} failed. Retrying in 10 seconds...")
-            time.sleep(10)
+            print(f"Attempt {attempt + 1} failed. Retrying in 5 seconds...")
+            time.sleep(5)
             continue
 
     data = response.json()
