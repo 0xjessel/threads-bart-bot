@@ -22,6 +22,53 @@ I also used this opportunity to try out Cursor, the new AI code editor, to see h
 
 I also schedule `refresh_access_token.py` to be a cron job that's run every month to keep the access token valid.  
 
+# Instructions
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/0xjessel/threads-bart-bot.git
+   cd threads-bart-bot
+   ```
+
+2. **Create a virtual environment:**
+   ```bash
+   python -m venv venv
+   ```
+
+3. **Activate the virtual environment:**
+   - On Windows:
+     ```bash
+     venv\Scripts\activate
+     ```
+   - On macOS/Linux:
+     ```bash
+     source venv/bin/activate
+     ```
+
+4. **Install the required packages:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. **Create a `.env.local` file:**
+   - Copy the `.env.example` file to create your own environment configuration:
+     ```bash
+     cp .env.example .env.local
+     ```
+
+6. **Edit the `.env.local` file:**
+   - Open `.env.local` in a text editor and fill in the required values
+
+7. **Run the script**
+```bash
+python fetch_and_post_bart_advisories.py
+```
+
+8. **Run tests**
+```bash
+python -m unittest test_fetch_advisories.py
+```
+
 # Random thoughts
 
 Why is BART API so flaky.  Why does BART use 24h time formatting but then also includes AM/PM.  WHY?!
