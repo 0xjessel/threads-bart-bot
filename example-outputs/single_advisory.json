@@ -1,0 +1,30 @@
+{
+  "?xml": {
+    "@version": "1.0",
+    "@encoding": "utf-8"
+  },
+  "root": {
+    "@id": "1",
+    "uri": {
+      "#cdata-section": "http://api.bart.gov/api/bsa.aspx?cmd=bsa&json=y"
+    },
+    "date": "09/29/2024",
+    "time": "16:31:01 PM PDT",
+    "bsa": [
+      {
+        "@id": "278331",
+        "station": "BART",
+        "type": "DELAY",
+        "description": {
+          "#cdata-section": "BART is recovering from an earlier problem. There is a 10-minute delay on the San Francisco Line in the SFO, Millbrae and East Bay directions due to earlier police activity at Montgomery Street Station. "
+        },
+        "sms_text": {
+          "#cdata-section": "BART recovering: 10 min delay on SF line in SFO, MLBR and East Bay dirs due to police activity at MONT stn."
+        },
+        "posted": "Sun Sep 29 2024 03:55 PM PDT",
+        "expires": "Thu Dec 31 2037 11:59 PM PST"
+      }
+    ],
+    "message": ""
+  }
+}
