@@ -1,5 +1,7 @@
 # @sfbartalerts
 
+<img src="https://raw.githubusercontent.com/0xjessel/threads-bart-bot/main/images/profile_pic.png" alt="Profile Pic" width="300px">
+
 Follow my [Threads profile](https://www.threads.net/@sfbartalerts)!
 
 # Why
