@@ -51,11 +51,8 @@ def fetch_advisories():
     # If it's not a "No delays reported" case, proceed with processing advisories
     for advisory in advisories:
         description = advisory['description']['#cdata-section']
-        # Use the root date and time as the posted time
-        posted_time_str = f"{root['date']} {root['time']}"
-
-        # Remove AM/PM from the posted time string
-        posted_time_str = posted_time_str.replace(' PM', '').replace(' AM', '')
+        # Use the posted time from the advisory
+        posted_time_str = advisory['posted'] 
 
         tzinfos = {"PDT": gettz("US/Pacific"), "PST": gettz("US/Pacific")}
         # Parse the posted time string with timezone awareness
