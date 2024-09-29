@@ -49,7 +49,7 @@ def fetch_advisories():
 
     # Check if there's only one advisory and it's "No delays reported"
     if isinstance(advisories, list) and len(advisories) == 1 and advisories[0]['description']['#cdata-section'].lower() == "no delays reported.":
-        return ["hello world"]  
+        return []  
 
     # If it's not a "No delays reported" case, proceed with processing advisories
     for advisory in advisories:
@@ -67,7 +67,7 @@ def fetch_advisories():
 
 def post_to_threads(advisory):
     """
-    Function to post advisory to Threads.
+    Function to post advisory to Threads 
     """
     THREADS_USER_ID = os.getenv('THREADS_USER_ID')
     THREADS_ACCESS_TOKEN = os.getenv('THREADS_ACCESS_TOKEN')
@@ -78,6 +78,16 @@ def post_to_threads(advisory):
     try:
         response = requests.post(THREADS_API_URL)
         response.raise_for_status()
+        
+        # Step 1: Parse the JSON response to get creation_id
+        data = response.json()
+        creation_id = data.get('id')  # Assuming the response contains an 'id' field
+        
+        # Step 2: Use creation_id to POST to the publish endpoint
+        publish_url = f"https://graph.threads.net/{THREADS_USER_ID}/threads_publish?creation_id={creation_id}&access_token={THREADS_ACCESS_TOKEN}"
+        publish_response = requests.post(publish_url)
+        publish_response.raise_for_status()  # Check for errors in the publish request
+        
         print("Advisory posted successfully.")
     except requests.RequestException as e:
         print(f"Failed to post advisory: {e}")
