@@ -6,7 +6,7 @@ Follow my [Threads profile](https://www.threads.net/@sfbartalerts)!
 
 # Why
 
-We recently launched the Threads API and my goal with this project is to 1) understand how it works and 2) inspire other developers to build more bots for Threads.  
+We recently launched the Threads API and my goal with this project is to 1) understand how it works and 2) inspire developers to build more useful bots for Threads.  
 
 I also take BART regularly into the office and would benefit from getting realtime updates if there are any important advisories during my commute.
 
