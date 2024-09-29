@@ -98,4 +98,4 @@ if __name__ == '__main__':
             print(advisory)
             post_to_threads(advisory)  
     else:
-        print("No advisories found.")
+        print("No advisories found within the last 5 minutes.")
