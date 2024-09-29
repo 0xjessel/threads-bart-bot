@@ -17,6 +17,9 @@ BART_API_KEY = os.getenv('BART_API_KEY')
 def fetch_advisories():
     max_retries = 12 
 
+    pacific_tz = pytz.timezone('US/Pacific')
+    current_time = datetime.now(pacific_tz)
+
     for attempt in range(max_retries):
         try:
             response = requests.get(BART_API_BASE_URL, params={
@@ -38,12 +41,6 @@ def fetch_advisories():
     data = response.json()
     root = data['root']
     advisories = root['bsa']
-    
-    pacific_tz = pytz.timezone('US/Pacific')
-    current_time = datetime.now(pacific_tz)
-
-    # Create tzinfos dictionary
-    tzinfos = {"PDT": gettz("US/Pacific"), "PST": gettz("US/Pacific")}
 
     recent_advisories = []
 
@@ -56,11 +53,16 @@ def fetch_advisories():
         description = advisory['description']['#cdata-section']
         # Use the root date and time as the posted time
         posted_time_str = f"{root['date']} {root['time']}"
-        posted_time = parser.parse(posted_time_str, tzinfos=tzinfos)
-        posted_time = posted_time.astimezone(pacific_tz)
 
-        time_difference = current_time - posted_time
-        if time_difference <= timedelta(minutes=5):
+        # Remove AM/PM from the posted time string
+        posted_time_str = posted_time_str.replace(' PM', '').replace(' AM', '')
+
+        tzinfos = {"PDT": gettz("US/Pacific"), "PST": gettz("US/Pacific")}
+        # Parse the posted time string with timezone awareness
+        posted_time = parser.parse(posted_time_str, tzinfos=tzinfos)
+
+        # Check if the advisory was posted within the last 5 minutes
+        if posted_time >= current_time - timedelta(minutes=5):
             recent_advisories.append(description)
 
     return recent_advisories
