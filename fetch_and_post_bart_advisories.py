@@ -72,8 +72,8 @@ def post_to_threads(advisory):
     THREADS_USER_ID = os.getenv('THREADS_USER_ID')
     THREADS_ACCESS_TOKEN = os.getenv('THREADS_ACCESS_TOKEN')
     
-    # Construct the API URL with the user ID, advisory text (encoded inline), and access token
-    THREADS_API_URL = f"https://graph.threads.net/{THREADS_USER_ID}/threads?text={quote(advisory)}&access_token={THREADS_ACCESS_TOKEN}"
+    # Construct the API URL with the user ID, advisory text (encoded inline), access token, and media_type
+    THREADS_API_URL = f"https://graph.threads.net/{THREADS_USER_ID}/threads?text={quote(advisory)}&access_token={THREADS_ACCESS_TOKEN}&media_type=TEXT"
     
     try:
         response = requests.post(THREADS_API_URL)
