@@ -6,6 +6,7 @@ from datetime import datetime, timedelta
 import pytz
 import time  # Add this import at the top of the file
 from dateutil.tz import gettz  # Add this import at the top of the file
+from urllib.parse import quote  # Import quote for URL encoding
 
 # Load environment variables
 load_dotenv(".env.local")
@@ -48,7 +49,7 @@ def fetch_advisories():
 
     # Check if there's only one advisory and it's "No delays reported"
     if isinstance(advisories, list) and len(advisories) == 1 and advisories[0]['description']['#cdata-section'].lower() == "no delays reported.":
-        return []
+        return ["hello world"]  
 
     # If it's not a "No delays reported" case, proceed with processing advisories
     for advisory in advisories:
@@ -64,13 +65,28 @@ def fetch_advisories():
 
     return recent_advisories
 
+def post_to_threads(advisory):
+    """
+    Function to post advisory to Threads.
+    """
+    THREADS_USER_ID = os.getenv('THREADS_USER_ID')
+    THREADS_ACCESS_TOKEN = os.getenv('THREADS_ACCESS_TOKEN')
+    
+    # Construct the API URL with the user ID, advisory text (encoded inline), and access token
+    THREADS_API_URL = f"https://graph.threads.net/{THREADS_USER_ID}/threads?text={quote(advisory)}&access_token={THREADS_ACCESS_TOKEN}"
+    
+    try:
+        response = requests.post(THREADS_API_URL)
+        response.raise_for_status()
+        print("Advisory posted successfully.")
+    except requests.RequestException as e:
+        print(f"Failed to post advisory: {e}")
+
 if __name__ == '__main__':
     recent_advisories = fetch_advisories()
     if recent_advisories:
         for advisory in recent_advisories:
             print(advisory)
-    """
-    suppress while testing
+            post_to_threads(advisory)  
     else:
         print("No advisories found.")
-    """
