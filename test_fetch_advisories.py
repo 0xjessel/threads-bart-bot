@@ -57,5 +57,23 @@ class TestFetchAdvisories(unittest.TestCase):
         # Expect no advisories since it's greater than 5 minutes
         self.assertEqual(len(recent_advisories), 0)
 
+    @patch('fetch_and_post_bart_advisories.requests.get')  
+    def test_no_delays_reported(self, mock_get):
+        # Mock response for "No delays reported"
+        mock_get.return_value.json.return_value = {
+            'root': {
+                'date': "09/29/2024",
+                'time': "17:07:01 PM PDT",
+                'bsa': [{
+                    'description': {'#cdata-section': "No delays reported."},
+                    'sms_text': {'#cdata-section': "No delays reported."}
+                }]
+            }
+        }
+        
+        recent_advisories = fetch_advisories()
+        # Expect no advisories since the response indicates "No delays reported."
+        self.assertEqual(len(recent_advisories), 0)
+
 if __name__ == '__main__':
     unittest.main()
