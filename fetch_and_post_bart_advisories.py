@@ -4,9 +4,9 @@ from dotenv import load_dotenv
 from dateutil import parser
 from datetime import datetime, timedelta
 import pytz
-import time  # Add this import at the top of the file
-from dateutil.tz import gettz  # Add this import at the top of the file
-from urllib.parse import quote  # Import quote for URL encoding
+import time  
+from dateutil.tz import gettz  
+from urllib.parse import quote 
 
 # Load environment variables
 load_dotenv(".env.local")
@@ -70,6 +70,10 @@ def post_to_threads(advisory):
     """
     THREADS_USER_ID = os.getenv('THREADS_USER_ID')
     THREADS_ACCESS_TOKEN = os.getenv('THREADS_ACCESS_TOKEN')
+    
+    # Truncate advisory to 500 characters if it exceeds the limit
+    if len(advisory) > 500:
+        advisory = advisory[:497] + '...'  
     
     # Construct the API URL with the user ID, advisory text (encoded inline), access token, and media_type
     THREADS_API_URL = f"https://graph.threads.net/{THREADS_USER_ID}/threads?text={quote(advisory)}&access_token={THREADS_ACCESS_TOKEN}&media_type=TEXT"
