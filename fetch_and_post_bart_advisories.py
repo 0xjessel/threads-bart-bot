@@ -60,7 +60,8 @@ def fetch_advisories():
 
         # Check if the advisory was posted within the last 5 minutes
         if posted_time >= current_time - timedelta(minutes=5):
-            recent_advisories.append(description)
+            # Append a tuple of (description, posted_time) to recent_advisories
+            recent_advisories.append((description, posted_time))
 
     return recent_advisories
 
@@ -98,8 +99,9 @@ def post_to_threads(advisory):
 if __name__ == '__main__':
     recent_advisories = fetch_advisories()
     if recent_advisories:
-        for advisory in recent_advisories:
-            print(advisory)
+        for advisory, posted_time in recent_advisories:
+            print(f"Advisory: {advisory}")
+            print(f"Posted Time: {posted_time}")
             post_to_threads(advisory)  
     else:
         print("No advisories found within the last 5 minutes.")
