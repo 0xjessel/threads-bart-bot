@@ -1,0 +1,56 @@
+{
+  "?xml": {
+    "@version": "1.0",
+    "@encoding": "utf-8"
+  },
+  "root": {
+    "@id": "1",
+    "uri": {
+      "#cdata-section": "http://api.bart.gov/api/bsa.aspx?cmd=bsa&json=y"
+    },
+    "date": "10/02/2024",
+    "time": "21:49:01 PM PDT",
+    "bsa": [
+      {
+        "@id": "278414",
+        "station": "BART",
+        "type": "DELAY",
+        "description": {
+          "#cdata-section": "There is a station closure at Lake Merritt. "
+        },
+        "sms_text": {
+          "#cdata-section": "Stn closure at LAKE."
+        },
+        "posted": "Wed Oct 02 2024 09:45 PM PDT",
+        "expires": "Thu Dec 31 2037 11:59 PM PST"
+      },
+      {
+        "@id": "278411",
+        "station": "BART",
+        "type": "DELAY",
+        "description": {
+          "#cdata-section": "There is a station closure at Fruitvale due to a major medical emergency. "
+        },
+        "sms_text": {
+          "#cdata-section": "Stn closure at FTVL due to a major medical emergency."
+        },
+        "posted": "Wed Oct 02 2024 09:07 PM PDT",
+        "expires": "Thu Dec 31 2037 11:59 PM PST"
+      },
+      {
+        "@id": "278413",
+        "station": "BART",
+        "type": "DELAY",
+        "description": {
+          "#cdata-section": "There is a major delay on the Berryessa Line in the Dublin / Pleasanton, Berryessa, Richmond and Daly City directions due to a major medical emergency. There is no BART train service between West Oakland, 12th street, and Coliseum stations. A/C transit bus service is available bus numbers 73, 1T and 62. "
+        },
+        "sms_text": {
+          "#cdata-section": "Major delay on berryessa line in DUBL, berryessa, RICH and DALY dirs due to a major medical emergency. No BART train svc between WOAK, 12th st, and COLS stns. A/c transit bus svc is available bus numbers 73, 1t and 62."
+        },
+        "posted": "Wed Oct 02 2024 09:18 PM PDT",
+        "expires": "Thu Dec 31 2037 11:59 PM PST"
+      }
+    ],
+    "message": ""
+  }
+}
