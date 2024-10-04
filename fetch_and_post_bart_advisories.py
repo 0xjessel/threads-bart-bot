@@ -58,8 +58,8 @@ def fetch_advisories():
         # Parse the posted time string with timezone awareness
         posted_time = parser.parse(posted_time_str, tzinfos=tzinfos)
 
-        # Check if the advisory was posted within the last 5 minutes (with 3-second jitter)
-        if posted_time >= current_time - timedelta(minutes=5, seconds=3):
+        # Check if the advisory was posted within the last 5 minutes (with 5-second jitter)
+        if posted_time >= current_time - timedelta(minutes=5, seconds=5):
             # Append a tuple of (description, posted_time) to recent_advisories
             recent_advisories.append((description, posted_time))
 
