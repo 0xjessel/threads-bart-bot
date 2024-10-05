@@ -46,6 +46,7 @@ def fetch_advisories():
 
     # Check if there's only one advisory and it's "No delays reported"
     if isinstance(advisories, list) and len(advisories) == 1 and advisories[0]['description']['#cdata-section'].lower() == "no delays reported.":
+        print("No delays reported.")
         return []  
 
     # If it's not a "No delays reported" case, proceed with processing advisories
@@ -57,11 +58,15 @@ def fetch_advisories():
         tzinfos = {"PDT": gettz("US/Pacific"), "PST": gettz("US/Pacific")}
         # Parse the posted time string with timezone awareness
         posted_time = parser.parse(posted_time_str, tzinfos=tzinfos)
+        print(f"advisory posted time: {posted_time}")
 
         # Check if the advisory was posted within the last 5 minutes (with 5-second jitter)
         if posted_time >= current_time - timedelta(minutes=5, seconds=5):
             # Append a tuple of (description, posted_time) to recent_advisories
+            print("adding advisory to post")
             recent_advisories.append((description, posted_time))
+        else:
+            print("advisory was older than 5 minutes, discarding")
 
     return recent_advisories
 
