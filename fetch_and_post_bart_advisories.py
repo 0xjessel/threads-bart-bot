@@ -20,6 +20,11 @@ def fetch_advisories():
     pacific_tz = pytz.timezone('US/Pacific')
     current_time = datetime.now(pacific_tz)
 
+    # Calculate the end time as the current time rounded down to the nearest 5-minute mark
+    end_time = current_time.replace(second=0, microsecond=0) - timedelta(minutes=current_time.minute % 5)
+    start_time = end_time - timedelta(minutes=5)
+
+
     for attempt in range(max_retries):
         try:
             response = requests.get(BART_API_BASE_URL, params={
@@ -60,8 +65,8 @@ def fetch_advisories():
         posted_time = parser.parse(posted_time_str, tzinfos=tzinfos)
         print(f"advisory posted time: {posted_time}")
 
-        # Check if the advisory was posted within the last 5 minutes (with 5-second jitter)
-        if posted_time >= current_time - timedelta(minutes=5, seconds=5):
+        # Check if the advisory was posted within the defined time window
+        if start_time <= posted_time < end_time:
             # Append a tuple of (description, posted_time) to recent_advisories
             print("adding advisory to post")
             recent_advisories.append((description, posted_time))
