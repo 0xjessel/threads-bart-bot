@@ -55,8 +55,12 @@ I also schedule `refresh_access_token.py` to be a cron job that's run every mont
      ```bash
      cp .env.example .env.local
      ```
-   - [Get a Threads API key by creating a Meta app created with the Threads use case](https://developers.facebook.com/docs/development/create-an-app/threads-use-case).
-   - [Get your Threads account's User ID](https://developers.facebook.com/docs/threads/threads-profiles/).
+6. **Set up your env file**
+   - [Get your BART API key](https://api.bart.gov/api/register.aspx)
+   - [Get your Threads API key and secret by creating a Meta app created with the Threads use case](https://developers.facebook.com/docs/development/create-an-app/threads-use-case)
+   - [Get your Threads account's User ID](https://developers.facebook.com/docs/threads/threads-profiles/)
+       - Don't forget to add your Threads account as a "Threads Tester" under App Roles > Roles and approve the request
+   - [Get your Threads access token](https://developers.facebook.com/docs/threads/get-started/get-access-tokens-and-permissions)
 
 6. **Edit the `.env.local` file:**
    - Open `.env.local` in a text editor and fill in the required values
