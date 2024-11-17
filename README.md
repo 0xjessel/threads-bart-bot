@@ -55,6 +55,8 @@ I also schedule `refresh_access_token.py` to be a cron job that's run every mont
      ```bash
      cp .env.example .env.local
      ```
+   - [Get a Threads API key by creating a Meta app created with the Threads use case](https://developers.facebook.com/docs/development/create-an-app/threads-use-case).
+   - [Get your Threads account's User ID](https://developers.facebook.com/docs/threads/threads-profiles/).
 
 6. **Edit the `.env.local` file:**
    - Open `.env.local` in a text editor and fill in the required values
