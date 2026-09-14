@@ -175,27 +175,43 @@ def post_to_threads(advisory):
     )
 
     headers = {'Authorization': f'Bearer {THREADS_ACCESS_TOKEN}'}
+
+    # Step 1: create the draft. If anything fails here, nothing was posted,
+    # so it is safe for the next run to retry with a fresh draft.
     try:
-        response = requests.post(THREADS_API_URL, headers=headers)
+        response = requests.post(THREADS_API_URL, headers=headers, timeout=15)
         response.raise_for_status()
-
         data = response.json()
-        creation_id = data.get('id') if isinstance(data, dict) else None
-        if not creation_id:
-            print(f"ERROR: Threads creation response missing 'id': {response.text[:200]!r}")
-            return False
+    except requests.RequestException as e:
+        print(f"Failed to create draft: {e}")
+        return False
 
-        publish_url = (
-            f"https://graph.threads.net/{THREADS_USER_ID}/threads_publish"
-            f"?creation_id={creation_id}"
-        )
-        publish_response = requests.post(publish_url, headers=headers)
+    creation_id = data.get('id') if isinstance(data, dict) else None
+    if not creation_id:
+        print(f"ERROR: Threads creation response missing 'id': {response.text[:200]!r}")
+        return False
+
+    # Step 2: publish that draft.
+    publish_url = (
+        f"https://graph.threads.net/{THREADS_USER_ID}/threads_publish"
+        f"?creation_id={creation_id}"
+    )
+    try:
+        publish_response = requests.post(publish_url, headers=headers, timeout=15)
         publish_response.raise_for_status()
         print("Advisory posted successfully.")
         return True
-    except requests.RequestException as e:
-        print(f"Failed to post advisory: {e}")
+    except requests.exceptions.HTTPError:
+        # Server explicitly rejected the publish: it was NOT posted.
+        print("Threads publish rejected by server; not posted.")
         return False
+    except requests.RequestException as e:
+        # Read timeout or other ambiguous outcome after the request was sent:
+        # the server may have already published. Assume posted so the advisory
+        # is marked seen and the next run does not re-fire the same advisory.
+        print(f"Publish returned an ambiguous outcome ({e}); assuming posted "
+              f"to avoid a duplicate re-post next run.")
+        return True
 
 
 def prune_seen(seen, now):
