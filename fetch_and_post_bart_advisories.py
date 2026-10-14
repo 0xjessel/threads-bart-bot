@@ -317,6 +317,7 @@ def main():
         print(f"State updated; now tracking {len(seen)} seen ids.")
     else:
         print("No advisories posted successfully; state file not updated (will retry next run).")
+        sys.exit(1)
 
 
 if __name__ == '__main__':
